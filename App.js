@@ -1,12 +1,10 @@
-import 'react-native-get-random-values'; // Polyfill for uuid
+import 'react-native-get-random-values';
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, View } from 'react-native';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from './firebaseConfig';
 import { Ionicons } from '@expo/vector-icons';
 
 // Screens
@@ -28,7 +26,6 @@ import { COLORS } from './constants/colors';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// Auth Stack
 function AuthStack() {
   return (
     <Stack.Navigator
@@ -44,7 +41,6 @@ function AuthStack() {
   );
 }
 
-// Home Stack (for nested navigation)
 function HomeStack() {
   return (
     <Stack.Navigator
@@ -61,7 +57,6 @@ function HomeStack() {
   );
 }
 
-// Main Tabs (excluding History from tab bar, accessible via Home)
 function MainTabs() {
   return (
     <Tab.Navigator
@@ -92,40 +87,26 @@ function MainTabs() {
 }
 
 export default function App() {
-  const { loadAll, loading, setUser } = useStore();
-  const [firebaseUser, setFirebaseUser] = useState(null);
-  const [checkingAuth, setCheckingAuth] = useState(true);
+  const { loadAll, loading, user, setUser } = useStore();
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     const init = async () => {
-      await loadAll();
-      const granted = await requestPermissions();
-      if (granted) await scheduleDailyReminder();
+      try {
+        await loadAll();
+        const granted = await requestPermissions();
+        if (granted) await scheduleDailyReminder();
+      } catch (e) {
+        console.error('Init error:', e);
+      }
+      setIsReady(true);
     };
     init();
   }, []);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (fbUser) => {
-      if (fbUser) {
-        setUser({
-          _id: fbUser.uid,
-          email: fbUser.email,
-          name: fbUser.displayName || 'User',
-          balance: 0, // Initialize locally
-        });
-      } else {
-        setUser(null);
-      }
-      setFirebaseUser(fbUser);
-      setCheckingAuth(false);
-    });
-    return unsubscribe;
-  }, []);
-
-  if (loading || checkingAuth) {
+  if (!isReady || loading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.background }}>
         <ActivityIndicator size="large" color={COLORS.primary} />
       </View>
     );
@@ -134,7 +115,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <StatusBar style="dark" />
-      {firebaseUser ? <MainTabs /> : <AuthStack />}
+      {user ? <MainTabs /> : <AuthStack />}
     </NavigationContainer>
   );
 }

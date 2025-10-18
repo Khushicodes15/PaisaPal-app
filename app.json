@@ -1,15 +1,27 @@
 {
   "expo": {
     "name": "PaisaPal",
-    "slug": "paisapal",
+    "slug": "paisapal-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
+    },
+    "extra": {
+      "firebaseApiKey": "${EXPO_PUBLIC_FIREBASE_API_KEY}",
+      "firebaseAuthDomain": "${EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN}",
+      "firebaseProjectId": "${EXPO_PUBLIC_FIREBASE_PROJECT_ID}",
+      "firebaseStorageBucket": "${EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET}",
+      "firebaseMessagingSenderId": "${EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID}",
+      "firebaseAppId": "${EXPO_PUBLIC_FIREBASE_APP_ID}",
+      "geminiApiKey": "${EXPO_PUBLIC_GEMINI_API_KEY}"
+    },
+    "ios": {
+      "supportsTablet": true
     },
     "android": {
       "package": "com.yourname.paisapal",
@@ -21,21 +33,13 @@
       "permissions": [
         "CAMERA",
         "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE",
-        "NOTIFICATIONS"
+        "WRITE_EXTERNAL_STORAGE"
       ],
       "edgeToEdgeEnabled": true
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "plugins": [
-      "expo-font"
-    ],
-    "extra": {
-      "eas": {
-        "projectId": "4a94198b-553c-4412-a7f7-9ac17fb2b347"
-      }
+      "favicon": "./assets/favicon.png",
+      "splash": "./assets/splash-icon.png"  
     }
   }
 }
