@@ -14,7 +14,7 @@ A modern, AI-powered personal finance management app built with React Native (Ex
 
 ### 🔐 Authentication
 - **Firebase Authentication** - Secure email/password login
-- **MongoDB Backend** - User data stored separately from auth
+
 
 ### 🎯 Smart Features
 - **Natural Language Processing** - Add expenses by typing: "spent 200 on food"
